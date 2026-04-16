@@ -1,0 +1,98 @@
+CREATE DATABASE Company;
+USE Company;
+
+
+CREATE TABLE Countries (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100) NOT NULL
+);
+
+
+CREATE TABLE Cities (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100) NOT NULL,
+    CountryId INT NOT NULL,
+    FOREIGN KEY (CountryId) REFERENCES Countries(Id)
+);
+
+
+CREATE TABLE Employees (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100) NOT NULL,
+    Surname NVARCHAR(100) NOT NULL,
+    Age INT,
+    Salary DECIMAL(10,2),
+    Position NVARCHAR(100),
+    IsDeleted BIT NOT NULL DEFAULT 0,
+    CityId INT NOT NULL,
+    CountryId INT NOT NULL,
+    FOREIGN KEY (CityId) REFERENCES Cities(Id),
+    FOREIGN KEY (CountryId) REFERENCES Countries(Id)
+);
+INSERT INTO Countries (Name)
+VALUES 
+('Azerbaijan'),
+('Turkey'),
+('Germany');
+
+INSERT INTO Cities (Name, CountryId)
+VALUES
+('Baku', 1),
+('Ganja', 1),
+('Istanbul', 2),
+('Berlin', 3);
+
+INSERT INTO Employees (Name, Surname, Age, Salary, Position, IsDeleted, CityId, CountryId)
+VALUES
+('Aydan', 'Sharifova', 22, 2500, 'Developer', 0, 1, 1),
+('Nigar', 'Aliyeva', 24, 1800, 'Reseption', 0, 2, 1),
+('Murad', 'Mammadov', 30, 3200, 'Manager', 1, 3, 2),
+('Laman', 'Hasanova', 27, 2100, 'Reseption', 0, 4, 3);
+
+SELECT 
+    e.Name,
+    e.Surname,
+    e.Age,
+    e.Salary,
+    e.Position,
+    c.Name AS CityName,
+    co.Name AS CountryName
+FROM Employees e
+JOIN Cities c ON e.CityId = c.Id
+JOIN Countries co ON e.CountryId = co.Id;
+
+SELECT 
+    e.Name,
+    e.Surname,
+    co.Name AS CountryName
+FROM Employees e
+JOIN Countries co ON e.CountryId = co.Id
+WHERE e.Salary > 2000;
+
+SELECT 
+    c.Name AS CityName,
+    co.Name AS CountryName
+FROM Cities c
+JOIN Countries co ON c.CountryId = co.Id;
+
+SELECT 
+    Name,
+    Surname,
+    Age,
+    Salary,
+    Position,
+    IsDeleted,
+    CityId,
+    CountryId
+FROM Employees
+WHERE Position = 'Reseption';
+
+SELECT 
+    e.Name,
+    e.Surname,
+    c.Name AS CityName,
+    co.Name AS CountryName
+FROM Employees e
+JOIN Cities c ON e.CityId = c.Id
+JOIN Countries co ON e.CountryId = co.Id
+WHERE e.IsDeleted = 1;
