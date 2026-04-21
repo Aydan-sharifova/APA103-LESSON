@@ -1,0 +1,117 @@
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+  }
+  body{
+    min-height:100vh;
+    background:#ededed;
+    font-family:Georgia, serif;
+  }
+  .page{
+    width:100%;
+    max-width:1100px;
+    margin:0 auto;
+    padding:40px 20px 80px;
+  }
+  .top-line{
+    height:1px;
+    background:#9d9d9d;
+    margin-bottom:10px;
+  }
+  .hero{
+    position:relative;
+    width:100%;
+    max-width:760px;
+    height:420px;
+    margin:0 auto;
+    overflow:hidden;
+    border:2px solid #222;
+    background:#000;
+  }
+  .bg{
+    position:absolute;
+    inset:0;
+    background-image:url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80');
+    background-size:cover;
+    background-position:center;
+    animation:bgMoveVertical 6s ease-in-out infinite alternate;
+    transform:scale(1.05);
+  }
+  .dark-layer{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.42));
+  }
+  .text{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    width:72%;
+    text-align:center;
+    color:#f1d758;
+    font-size:18px;
+    line-height:1.4;
+    text-shadow:0 1px 3px rgba(0,0,0,.8);
+    z-index:2;
+  }
+  .text-top{
+    top:18px;
+  }
+  .text-center{
+    top:155px;
+  }
+  .text-bottom{
+    bottom:24px;
+  }
+  .brand{
+    margin-top:110px;
+    text-align:center;
+  }
+  .brand h2{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:48px;
+    letter-spacing:2px;
+    color:#20263a;
+  }
+  .brand p{
+    margin-top:-6px;
+    font-size:54px;
+    font-style:italic;
+    color:#ff2f91;
+  }
+  
+  @keyframes bgMoveVertical{
+    0%{
+      transform:translateY(-20px) scale(1.08);
+    }
+    100%{
+      transform:translateY(20px) scale(1.08);
+    }
+  }
+  
+  @media (max-width:768px){
+    .hero{
+      height:340px;
+    }
+    .text{
+      width:86%;
+      font-size:14px;
+      line-height:1.35;
+    }
+    .text-top{
+      top:14px;
+    }
+    .text-center{
+      top:122px;
+    }
+    .text-bottom{
+      bottom:18px;
+    }
+    .brand h2{
+      font-size:34px;
+    }
+    .brand p{
+      font-size:38px;
+    }
+  }

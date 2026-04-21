@@ -1,0 +1,93 @@
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+body{
+min-height:100vh;
+font-family:Arial, Helvetica, sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+position:relative;
+}
+.background{
+position:absolute;
+inset:0;
+background:linear-gradient(90deg, #55d4ec, #c200ff);
+}
+.login-card{
+position:relative;
+z-index:1;
+width:460px;
+background:#fff;
+padding:38px 34px 34px;
+box-shadow:0 10px 35px rgba(0,0,0,.18);
+}
+.close-btn{
+position:absolute;
+top:14px;
+right:16px;
+border:none;
+background:transparent;
+font-size:34px;
+font-weight:700;
+cursor:pointer;
+}
+h1{
+text-align:center;
+font-size:56px;
+margin-bottom:34px;
+}
+label{
+display:block;
+font-size:18px;
+margin-bottom:10px;
+color:#333;
+}
+input{
+width:100%;
+height:55px;
+border:2px solid #dedede;
+margin-bottom:24px;
+padding:0 14px;
+font-size:18px;
+}
+.forgot{
+display:inline-block;
+margin-bottom:28px;
+color:#85afcf;
+text-decoration:none;
+font-size:18px;
+}
+.login-btn{
+width:100%;
+border:none;
+height:56px;
+color:#fff;
+font-size:20px;
+font-weight:700;
+cursor:pointer;
+background:linear-gradient(90deg, #55d4ec, #c200ff);
+margin-bottom:36px;
+}
+.signup-text{
+text-align:center;
+font-size:18px;
+color:#333;
+}
+.signup-text a{
+color:#73a4cc;
+text-decoration:none;
+font-weight:600;
+}
+@media (max-width:520px){
+.login-card{
+    width:92%;
+    padding:28px 20px;
+}
+h1{
+    font-size:40px;
+}
+}
