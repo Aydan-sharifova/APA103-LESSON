@@ -1,0 +1,49 @@
+@{
+    ViewData["Title"] = "Details";
+    List<Teacher> teachers = ViewData["Teachers"] as List<Teacher> ?? new List<Teacher>();
+}
+
+<section>
+    <h1>Dynamic Properties</h1>
+    <p>ViewBag, ViewData and TempData can pass data from controller to view without a ViewModel.</p>
+</section>
+
+<div class="grid">
+    <section>
+        <h2>Students From ViewBag</h2>
+        <ul>
+            @foreach (Student student in ViewBag.Students)
+            {
+                <li>@student.Id - @student.Name - @student.Age</li>
+            }
+        </ul>
+    </section>
+
+    <section>
+        <h2>Teachers From ViewData</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Teacher teacher in teachers)
+                {
+                    <tr>
+                        <td>@teacher.Id</td>
+                        <td>@teacher.Name</td>
+                        <td>@teacher.Salary</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+</div>
+
+<section class="note">
+    <h2>TempData</h2>
+    <p>@TempData["Name"]</p>
+</section>

@@ -1,0 +1,50 @@
+@model HomeVM
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section>
+    <h1>@Model.LessonTitle</h1>
+    <p>@Model.Description</p>
+</section>
+
+<section class="note">
+    <h2>Dynamic Properties</h2>
+    <p>TempData value: <strong>@TempData["Name"]</strong></p>
+    <p>These examples work, but they are not checked at compile time.</p>
+</section>
+
+<div class="grid">
+    <section>
+        <h2>Students From ViewModel</h2>
+        <ul>
+            @foreach (Student student in Model.Students)
+            {
+                <li>@student.Id - @student.Name - @student.Age</li>
+            }
+        </ul>
+    </section>
+
+    <section>
+        <h2>Teachers From ViewModel</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Teacher teacher in Model.Teachers)
+                {
+                    <tr>
+                        <td>@teacher.Id</td>
+                        <td>@teacher.Name</td>
+                        <td>@teacher.Salary</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+</div>
