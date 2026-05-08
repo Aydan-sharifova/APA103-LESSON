@@ -1,4 +1,5 @@
 ﻿using _27_FrontToBackSqlConnection.Data;
+using _27_FrontToBackSqlConnection.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -6,9 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddConfiguredServices(builder.Configuration);
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
-    opt.UseSqlServer("Server=localhost;Database=ProniaDb;Trusted_Connection=true;TrustServerCertificate=true");
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 
 var app = builder.Build();

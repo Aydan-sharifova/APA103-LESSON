@@ -1,9 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.Extensions.Options.IOptions<_27_FrontToBackSqlConnection.Configurations.AppSettings> AppSettings
+@{
+    string siteTitle = AppSettings.Value.SiteTitle;
+    string headerOffer = AppSettings.Value.HeaderOffer;
+    string phone = AppSettings.Value.Phone;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Pronia - Plant Store Bootstrap 5 Template</title>
+    <title>@siteTitle</title>
     <meta name="robots" content="index, follow" />
     <meta name="description"
           content="Pronia plant store bootstrap 5 template is an awesome website template for any home plant shop." />
@@ -46,7 +52,7 @@
                     <div class="row align-items-center">
                         <div class="col-6">
                             <div class="header-top-left">
-                                <span class="pronia-offer">HELLO EVERYONE! 25% Off All Products</span>
+                                <span class="pronia-offer">@headerOffer</span>
                             </div>
                         </div>
                         <div class="col-6">
@@ -96,10 +102,10 @@
                             <div class="header-middle-wrap position-relative">
                                 <div class="header-contact d-none d-lg-flex">
                                     <i class="pe-7s-call"></i>
-                                    <a href="tel://+00-123-456-789">+00 123 456 789</a>
+                                    <a href="tel:@phone">@phone</a>
                                 </div>
 
-                                <a href="index.html" class="header-logo">
+                                <a asp-controller="Home" asp-action="Index" class="header-logo">
                                     <img src="~/assets/images/logo/dark.png" alt="Header Logo" />
                                 </a>
 
@@ -164,7 +170,7 @@
                                 <nav class="main-nav">
                                     <ul>
                                         <li class="drop-holder">
-                                            <a href="index.html">Home</a>
+                                            <a asp-controller="Home" asp-action="Index">Home</a>
                                             <ul class="drop-menu">
                                                 <li>
                                                     <a href="index.html">Home One</a>
@@ -175,7 +181,7 @@
                                             </ul>
                                         </li>
                                         <li class="megamenu-holder">
-                                            <a href="shop.html">Shop</a>
+                                            <a asp-controller="Shop" asp-action="Index">Shop</a>
                                             <ul class="drop-menu megamenu">
                                                 <li>
                                                     <span class="title">Shop Layout</span>

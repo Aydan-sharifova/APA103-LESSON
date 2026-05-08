@@ -16,20 +16,22 @@ public class HomeController: Controller
 
     public async Task<IActionResult> Index()
     {
-
-        //_context.AddRange();
-        //_context.SaveChanges();
-
-        List<Slider> sliders = _context.Sliders.OrderBy(s => s.Order)
+        List<Slider> sliders = await _context.Sliders.OrderBy(s => s.Order)
             .Where(s => !s.isDeleted)
             .Take(2)
-            .ToList();
+            .ToListAsync();
+
+        List<Product> products = await _context.Products
+            .Where(p => !p.isDeleted)
+            .OrderByDescending(p => p.CreatedAt)
+            .Take(8)
+            .ToListAsync();
 
         HomeVM homeVm = new()
         {
-            Sliders = sliders
-
-    };
+            Sliders = sliders,
+            Products = products
+        };
         return View(homeVm);
     }
 

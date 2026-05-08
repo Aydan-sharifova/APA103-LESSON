@@ -1,0 +1,88 @@
+﻿@model ProductVM
+
+<main class="main-content">
+    <div class="breadcrumb-area breadcrumb-height">
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-item">
+                        <h2 class="breadcrumb-heading">@Model.Product.Name</h2>
+                        <ul>
+                            <li>
+                                <a asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li>
+                                <a asp-controller="Shop" asp-action="Index">Shop</a>
+                            </li>
+                            <li>@Model.Product.Name</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="single-product-area section-space-top-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="single-product-img">
+                        <img class="img-full" src="~/images/@Model.Product.Image" alt="@Model.Product.Name" />
+                    </div>
+                </div>
+                <div class="col-lg-6 pt-9 pt-lg-0">
+                    <div class="single-product-content">
+                        <h2 class="title">@Model.Product.Name</h2>
+                        <div class="price-box">
+                            <span class="new-price">$@Model.Product.Price.ToString("0.00")</span>
+                        </div>
+                        <div class="rating-box-wrap pb-4">
+                            <div class="rating-box">
+                                <ul>
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        <li><i class="fa fa-star"></i></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="short-desc">@Model.Product.Description</p>
+                        <div class="single-product-add-to-cart">
+                            <a class="btn btn-custom-size lg-size btn-pronia-primary" href="#">Add to cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.RelatedProducts.Count > 0)
+            {
+                <div class="product-area section-space-y-axis-100">
+                    <div class="section-title-wrap">
+                        <h2 class="section-title mb-0">Related Products</h2>
+                    </div>
+                    <div class="row">
+                        @foreach (Product product in Model.RelatedProducts)
+                        {
+                            <div class="col-xl-3 col-md-4 col-sm-6">
+                                <div class="product-item">
+                                    <div class="product-img">
+                                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id">
+                                            <img class="primary-img" src="~/images/@product.Image" alt="@product.Name" />
+                                            <img class="secondary-img" src="~/images/@(product.HoverImage ?? product.Image)" alt="@product.Name" />
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <a class="product-name" asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id">@product.Name</a>
+                                        <div class="price-box pb-1">
+                                            <span class="new-price">$@product.Price.ToString("0.00")</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</main>
