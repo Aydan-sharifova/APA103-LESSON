@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using _27_FrontToBackSqlConnection.Models;
 using _27_FrontToBackSqlConnection.ViewModels;
 using _27_FrontToBackSqlConnection.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace _27_FrontToBackSqlConnection.Controllers;
 
@@ -15,29 +14,24 @@ public class HomeController: Controller
         _context = context;
     }
 
-    List<Slider> _sliders = new List<Slider>
+    public async Task<IActionResult> Index()
     {
-        new Slider{Id=1,Title="Title-1",Subtitle="Subtitle-1",Desc="Beatiful Roses",Image="1-1-524x617.png",Order=1,isDeleted=true},
-        new Slider{Id=2,Title="Title-2",Subtitle="Subtitle-2",Desc="Beatiful Roses",Image="1-2-524x617.png",Order=2,isDeleted=false},
-        new Slider{Id=3,Title="Title-3",Subtitle="Subtitle-3",Desc="Beatiful Roses",Image="1-3-524x617.png",Order=3,isDeleted=true}
-    };
 
-  
+        //_context.AddRange();
+        //_context.SaveChanges();
 
-    public IActionResult Index()
-    {
+        List<Slider> sliders = _context.Sliders.OrderBy(s => s.Order)
+            .Where(s => !s.isDeleted)
+            .Take(2)
+            .ToList();
+
         HomeVM homeVm = new()
         {
-            Sliders = _sliders
-            .OrderBy(s => s.Order)
-            .Where(s=>!s.isDeleted)
-            .Take(2)
-            .ToList(),
-        };
-        
+            Sliders = sliders
+
+    };
         return View(homeVm);
     }
 
     
 }
-

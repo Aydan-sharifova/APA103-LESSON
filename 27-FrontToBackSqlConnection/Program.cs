@@ -8,8 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
-    opt.UseSqlServer()
-    });
+    opt.UseSqlServer("Server=localhost;Database=ProniaDb;Trusted_Connection=true;TrustServerCertificate=true");
+});
 
 var app = builder.Build();
 
@@ -33,4 +33,3 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-

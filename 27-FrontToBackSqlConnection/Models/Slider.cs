@@ -1,7 +1,4 @@
-﻿using System;
-using _27_FrontToBackSqlConnection.Models;
-
-namespace _27_FrontToBackSqlConnection.Models;
+﻿namespace _27_FrontToBackSqlConnection.Models;
 
 public class Slider: BaseEntity
 {
@@ -12,4 +9,3 @@ public class Slider: BaseEntity
 	public int Order { get; set; }
 
 }
-
