@@ -19,6 +19,8 @@ namespace _27_FrontToBackSqlConnection.Controllers
         {
             List<Product> products = await _context.Products
                 .Where(p => !p.isDeleted)
+                .Include(p => p.Category)
+                .Include(p => p.ProductImages)
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
 

@@ -25,4 +25,9 @@ public class EmailService : IEmailService
 
         return Task.CompletedTask;
     }
+
+    public void SendMail()
+    {
+        _logger.LogInformation("Sent mail from {SiteTitle}", _appSettings.SiteTitle);
+    }
 }
