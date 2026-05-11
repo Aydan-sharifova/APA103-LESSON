@@ -2,9 +2,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using _27_FrontToBackSqlConnection.Data;
 
 #nullable disable
@@ -12,36 +12,36 @@ using _27_FrontToBackSqlConnection.Data;
 namespace _27_FrontToBackSqlConnection.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260508011845_AddProductRelations")]
-    partial class AddProductRelations
+    [Migration("20260511163353_InitialPostgresMigration")]
+    partial class InitialPostgresMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "8.0.11")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("_27_FrontToBackSqlConnection.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -51,21 +51,21 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "House Plants",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Garden Plants",
                             isDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Gift Plants",
                             isDeleted = false
                         });
@@ -75,50 +75,50 @@ namespace _27_FrontToBackSqlConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("HoverImage")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsBestSeller")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsFeatured")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsNew")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<string>("SKU")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -131,7 +131,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         {
                             Id = 1,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "A bright flowering plant for balconies, gardens, and warm indoor corners.",
                             HoverImage = "1-2-270x300.jpg",
                             Image = "1-1-270x300.jpg",
@@ -147,7 +147,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         {
                             Id = 2,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Compact, cheerful blooms with easy care needs and long seasonal color.",
                             HoverImage = "1-3-270x300.jpg",
                             Image = "1-2-270x300.jpg",
@@ -163,7 +163,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         {
                             Id = 3,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Elegant heart-shaped flowers for soft shade and decorative garden beds.",
                             HoverImage = "1-4-270x300.jpg",
                             Image = "1-3-270x300.jpg",
@@ -179,7 +179,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         {
                             Id = 4,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "A resilient perennial with rich color and a tidy spreading habit.",
                             HoverImage = "1-5-270x300.jpg",
                             Image = "1-4-270x300.jpg",
@@ -195,7 +195,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         {
                             Id = 5,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "A sun-loving plant with vivid blooms and pollinator-friendly growth.",
                             HoverImage = "1-6-270x300.jpg",
                             Image = "1-5-270x300.jpg",
@@ -211,7 +211,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         {
                             Id = 6,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Hardy clusters of flowers that fit naturally into low-maintenance gardens.",
                             HoverImage = "1-7-270x300.jpg",
                             Image = "1-6-270x300.jpg",
@@ -229,25 +229,25 @@ namespace _27_FrontToBackSqlConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool?>("IsPrimary")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -259,7 +259,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Image = "1-1-270x300.jpg",
                             IsPrimary = true,
                             ProductId = 1,
@@ -268,7 +268,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Image = "1-2-270x300.jpg",
                             IsPrimary = false,
                             ProductId = 1,
@@ -277,7 +277,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Image = "1-2-270x300.jpg",
                             IsPrimary = true,
                             ProductId = 2,
@@ -286,7 +286,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Image = "1-3-270x300.jpg",
                             IsPrimary = false,
                             ProductId = 2,
@@ -295,7 +295,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Image = "1-3-270x300.jpg",
                             IsPrimary = true,
                             ProductId = 3,
@@ -304,7 +304,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Image = "1-4-270x300.jpg",
                             IsPrimary = true,
                             ProductId = 4,
@@ -313,7 +313,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Image = "1-5-270x300.jpg",
                             IsPrimary = true,
                             ProductId = 5,
@@ -322,7 +322,7 @@ namespace _27_FrontToBackSqlConnection.Migrations
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Image = "1-6-270x300.jpg",
                             IsPrimary = true,
                             ProductId = 6,
@@ -334,34 +334,34 @@ namespace _27_FrontToBackSqlConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Desc")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<int>("Order")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Subtitle")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 

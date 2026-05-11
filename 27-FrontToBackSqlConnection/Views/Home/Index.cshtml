@@ -8,7 +8,7 @@
                 {
                     <div class="swiper-slide animation-style-01">
                         <div class="slide-inner style-1 bg-height"
-                             data-bg-image="~/assets/images/slider/bg/1-1.jpg">
+                             data-bg-image="~/images/1-1.jpg">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-6 order-2 order-lg-1 align-self-center">
@@ -20,7 +20,8 @@
                                             </p>
                                             <div class="btn-wrap">
                                                 <a class="btn btn-custom-size xl-size btn-pronia-primary"
-                                                   href="shop.html">@slider.Subtitle</a>
+                                                   asp-controller="Shop"
+                                                   asp-action="Index">@slider.Subtitle</a>
                                             </div>
                                         </div>
                                     </div>
@@ -28,39 +29,7 @@
                                         <div class="inner-img">
                                             <div class="scene fill">
                                                 <div class="expand-width" data-depth="0.2">
-                                                    <img src="~/assets/images/website-images//@slider.Image"
-                                                         alt="Inner Image" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide animation-style-01">
-                        <div class="slide-inner style-1 bg-height"
-                             data-bg-image="~/assets/images/slider/bg/1-2.jpg">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-lg-6 order-2 order-lg-1 align-self-center">
-                                        <div class="slide-content text-black">
-                                            <span class="offer">65% Off</span>
-                                            <h2 class="title">@slider.Title</h2>
-                                            <p class="short-desc">
-                                                @slider.Desc
-                                            </p>
-                                            <div class="btn-wrap">
-                                                <a class="btn btn-custom-size xl-size btn-pronia-primary"
-                                                   href="shop.html">@slider.Subtitle</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-8 offset-md-2 offset-lg-0 order-1 order-lg-2">
-                                        <div class="inner-img">
-                                            <div class="scene fill">
-                                                <div class="expand-width" data-depth="0.2">
-                                                    <img src="~/assets/images/website-images//@slider.Image"
+                                                    <img src="~/images/@slider.Image"
                                                          alt="Inner Image" />
                                                 </div>
                                             </div>
@@ -91,7 +60,7 @@
                 <div class="shipping-item">
                   <div class="shipping-img">
                     <img
-                      src="~/assets/images/website-images//car.png"
+                      src="~/images/car.png"
                       alt="Shipping Icon"
                     />
                   </div>
@@ -105,7 +74,7 @@
                 <div class="shipping-item">
                   <div class="shipping-img">
                     <img
-                      src="~/assets/images/website-images//card.png"
+                      src="~/images/card.png"
                       alt="Shipping Icon"
                     />
                   </div>
@@ -119,7 +88,7 @@
                 <div class="shipping-item">
                   <div class="shipping-img">
                     <img
-                      src="~/assets/images/website-images//service.png"
+                      src="~/images/service.png"
                       alt="Shipping Icon"
                     />
                   </div>
@@ -135,6 +104,154 @@
       </div>
       <!-- Shipping Area End Here -->
 
+      <!-- Begin Product Area -->
+      <div class="product-area section-space-top-100">
+        <div class="container">
+          <div class="section-title-wrap">
+            <h2 class="section-title mb-0">Our Products</h2>
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <ul class="nav product-tab-nav tab-style-1" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <a class="active" id="featured-tab" data-bs-toggle="tab" href="#featured" role="tab" aria-controls="featured" aria-selected="true">
+                    Featured
+                  </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a id="bestseller-tab" data-bs-toggle="tab" href="#bestseller" role="tab" aria-controls="bestseller" aria-selected="false">
+                    Bestseller
+                  </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a id="latest-tab" data-bs-toggle="tab" href="#latest" role="tab" aria-controls="latest" aria-selected="false">
+                    Latest
+                  </a>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="featured" role="tabpanel" aria-labelledby="featured-tab">
+                  <div class="product-item-wrap row">
+                    @foreach (Product product in Model.Products.Where(p => p.IsFeatured))
+                    {
+                      <div class="col-xl-3 col-md-4 col-sm-6">
+                        <div class="product-item">
+                          <div class="product-img">
+                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id">
+                              <img class="primary-img" src="~/images/@product.Image" alt="@product.Name" />
+                              <img class="secondary-img" src="~/images/@(product.HoverImage ?? product.Image)" alt="@product.Name" />
+                            </a>
+                            <div class="product-add-action">
+                              <ul>
+                                <li><a href="#" data-tippy="Add to wishlist"><i class="pe-7s-like"></i></a></li>
+                                <li><a asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id" data-tippy="Quickview"><i class="pe-7s-look"></i></a></li>
+                                <li><a href="#" data-tippy="Add to cart"><i class="pe-7s-cart"></i></a></li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="product-content">
+                            <a class="product-name" asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id">@product.Name</a>
+                            <div class="price-box pb-1">
+                              <span class="new-price">$@product.Price.ToString("0.00")</span>
+                            </div>
+                            <div class="rating-box">
+                              <ul>
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                  <li><i class="fa fa-star"></i></li>
+                                }
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="bestseller" role="tabpanel" aria-labelledby="bestseller-tab">
+                  <div class="product-item-wrap row">
+                    @foreach (Product product in Model.Products.Where(p => p.IsBestSeller))
+                    {
+                      <div class="col-xl-3 col-md-4 col-sm-6">
+                        <div class="product-item">
+                          <div class="product-img">
+                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id">
+                              <img class="primary-img" src="~/images/@product.Image" alt="@product.Name" />
+                              <img class="secondary-img" src="~/images/@(product.HoverImage ?? product.Image)" alt="@product.Name" />
+                            </a>
+                            <div class="product-add-action">
+                              <ul>
+                                <li><a href="#" data-tippy="Add to wishlist"><i class="pe-7s-like"></i></a></li>
+                                <li><a asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id" data-tippy="Quickview"><i class="pe-7s-look"></i></a></li>
+                                <li><a href="#" data-tippy="Add to cart"><i class="pe-7s-cart"></i></a></li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="product-content">
+                            <a class="product-name" asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id">@product.Name</a>
+                            <div class="price-box pb-1">
+                              <span class="new-price">$@product.Price.ToString("0.00")</span>
+                            </div>
+                            <div class="rating-box">
+                              <ul>
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                  <li><i class="fa fa-star"></i></li>
+                                }
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="latest" role="tabpanel" aria-labelledby="latest-tab">
+                  <div class="product-item-wrap row">
+                    @foreach (Product product in Model.Products.Where(p => p.IsNew))
+                    {
+                      <div class="col-xl-3 col-md-4 col-sm-6">
+                        <div class="product-item">
+                          <div class="product-img">
+                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id">
+                              <img class="primary-img" src="~/images/@product.Image" alt="@product.Name" />
+                              <img class="secondary-img" src="~/images/@(product.HoverImage ?? product.Image)" alt="@product.Name" />
+                            </a>
+                            <div class="product-add-action">
+                              <ul>
+                                <li><a href="#" data-tippy="Add to wishlist"><i class="pe-7s-like"></i></a></li>
+                                <li><a asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id" data-tippy="Quickview"><i class="pe-7s-look"></i></a></li>
+                                <li><a href="#" data-tippy="Add to cart"><i class="pe-7s-cart"></i></a></li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="product-content">
+                            <a class="product-name" asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id">@product.Name</a>
+                            <div class="price-box pb-1">
+                              <span class="new-price">$@product.Price.ToString("0.00")</span>
+                            </div>
+                            <div class="rating-box">
+                              <ul>
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                  <li><i class="fa fa-star"></i></li>
+                                }
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Product Area End Here -->
+
+      @*
       <!-- Begin Product Area -->
       <div class="product-area section-space-top-100">
         <div class="container">
@@ -200,12 +317,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-1-270x300.jpg"
+                              src="~/images/1-1-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-2-270x300.jpg"
+                              src="~/images/1-2-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -282,12 +399,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-2-270x300.jpg"
+                              src="~/images/1-2-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-3-270x300.jpg"
+                              src="~/images/1-3-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -364,12 +481,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-3-270x300.jpg"
+                              src="~/images/1-3-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-4-270x300.jpg"
+                              src="~/images/1-4-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -446,12 +563,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-4-270x300.jpg"
+                              src="~/images/1-4-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-5-270x300.jpg"
+                              src="~/images/1-5-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -528,12 +645,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-5-270x300.jpg"
+                              src="~/images/1-5-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-6-270x300.jpg"
+                              src="~/images/1-6-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -610,12 +727,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-6-270x300.jpg"
+                              src="~/images/1-6-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-7-270x300.jpg"
+                              src="~/images/1-7-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -692,12 +809,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-7-270x300.jpg"
+                              src="~/images/1-7-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-8-270x300.jpg"
+                              src="~/images/1-8-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -774,12 +891,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-8-270x300.jpg"
+                              src="~/images/1-8-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-1-270x300.jpg"
+                              src="~/images/1-1-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -865,12 +982,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-5-270x300.jpg"
+                              src="~/images/1-5-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-6-270x300.jpg"
+                              src="~/images/1-6-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -947,12 +1064,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-6-270x300.jpg"
+                              src="~/images/1-6-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-7-270x300.jpg"
+                              src="~/images/1-7-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -1029,12 +1146,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-7-270x300.jpg"
+                              src="~/images/1-7-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-8-270x300.jpg"
+                              src="~/images/1-8-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -1111,12 +1228,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-8-270x300.jpg"
+                              src="~/images/1-8-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-1-270x300.jpg"
+                              src="~/images/1-1-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -1193,12 +1310,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-1-270x300.jpg"
+                              src="~/images/1-1-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-2-270x300.jpg"
+                              src="~/images/1-2-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -1275,12 +1392,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-2-270x300.jpg"
+                              src="~/images/1-2-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-3-270x300.jpg"
+                              src="~/images/1-3-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -1357,12 +1474,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-3-270x300.jpg"
+                              src="~/images/1-3-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-4-270x300.jpg"
+                              src="~/images/1-4-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -1439,12 +1556,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-4-270x300.jpg"
+                              src="~/images/1-4-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-5-270x300.jpg"
+                              src="~/images/1-5-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -1530,12 +1647,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-7-270x300.jpg"
+                              src="~/images/1-7-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-8-270x300.jpg"
+                              src="~/images/1-8-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -1612,12 +1729,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-8-270x300.jpg"
+                              src="~/images/1-8-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-1-270x300.jpg"
+                              src="~/images/1-1-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -1694,12 +1811,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-1-270x300.jpg"
+                              src="~/images/1-1-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-2-270x300.jpg"
+                              src="~/images/1-2-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -1776,12 +1893,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-2-270x300.jpg"
+                              src="~/images/1-2-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-3-270x300.jpg"
+                              src="~/images/1-3-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -1858,12 +1975,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-5-270x300.jpg"
+                              src="~/images/1-5-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-6-270x300.jpg"
+                              src="~/images/1-6-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -1940,12 +2057,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-6-270x300.jpg"
+                              src="~/images/1-6-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-7-270x300.jpg"
+                              src="~/images/1-7-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -2022,12 +2139,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-3-270x300.jpg"
+                              src="~/images/1-3-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-4-270x300.jpg"
+                              src="~/images/1-4-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -2104,12 +2221,12 @@
                           <a href="shop.html">
                             <img
                               class="primary-img"
-                              src="~/assets/images/website-images//1-4-270x300.jpg"
+                              src="~/images/1-4-270x300.jpg"
                               alt="Product Images"
                             />
                             <img
                               class="secondary-img"
-                              src="~/assets/images/website-images//1-5-270x300.jpg"
+                              src="~/images/1-5-270x300.jpg"
                               alt="Product Images"
                             />
                           </a>
@@ -2188,6 +2305,7 @@
         </div>
       </div>
       <!-- Product Area End Here -->
+      *@
 
       <!-- Begin Banner Area -->
       <div class="banner-area section-space-top-90">
@@ -2197,7 +2315,7 @@
               <div class="banner-item img-hover-effect">
                 <div class="banner-img">
                   <img
-                    src="~/assets/images/website-images//1-1-770x300.jpg"
+                    src="~/images/1-1-770x300.jpg"
                     alt="Banner Image"
                   />
                 </div>
@@ -2221,7 +2339,7 @@
               <div class="banner-item img-hover-effect">
                 <div class="banner-img">
                   <img
-                    src="~/assets/images/website-images//1-2-370x300.jpg"
+                    src="~/images/1-2-370x300.jpg"
                     alt="Banner Image"
                   />
                 </div>
@@ -2242,7 +2360,7 @@
               <div class="banner-item img-hover-effect">
                 <div class="banner-img">
                   <img
-                    src="~/assets/images/website-images//1-3-370x300.jpg"
+                    src="~/images/1-3-370x300.jpg"
                     alt="Banner Image"
                   />
                 </div>
@@ -2263,7 +2381,7 @@
               <div class="banner-item img-hover-effect">
                 <div class="banner-img">
                   <img
-                    src="~/assets/images/website-images//1-4-770x300.jpg"
+                    src="~/images/1-4-770x300.jpg"
                     alt="Banner Image"
                   />
                 </div>
@@ -2302,17 +2420,72 @@
             <div class="col-lg-12">
               <div class="swiper-container product-slider">
                 <div class="swiper-wrapper">
+                  @foreach (Product product in Model.Products.Where(p => p.IsNew))
+                  {
+                    <div class="swiper-slide product-item">
+                      <div class="product-img">
+                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id">
+                          <img class="primary-img" src="~/images/@product.Image" alt="@product.Name" />
+                          <img class="secondary-img" src="~/images/@(product.HoverImage ?? product.Image)" alt="@product.Name" />
+                        </a>
+                        <div class="product-add-action">
+                          <ul>
+                            <li><a href="#" data-tippy="Add to wishlist"><i class="pe-7s-like"></i></a></li>
+                            <li><a asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id" data-tippy="Quickview"><i class="pe-7s-look"></i></a></li>
+                            <li><a href="#" data-tippy="Add to cart"><i class="pe-7s-cart"></i></a></li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="product-content">
+                        <a class="product-name" asp-controller="Product" asp-action="Detail" asp-route-id="@product.Id">@product.Name</a>
+                        <div class="price-box pb-1">
+                          <span class="new-price">$@product.Price.ToString("0.00")</span>
+                        </div>
+                        <div class="rating-box">
+                          <ul>
+                            @for (int i = 0; i < 5; i++)
+                            {
+                              <li><i class="fa fa-star"></i></li>
+                            }
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Product Area End Here -->
+
+      @*
+      <!-- Begin Product Area -->
+      <div class="product-area section-space-top-100">
+        <div class="container">
+          <div class="row">
+            <div class="section-title-wrap without-tab">
+              <h2 class="section-title">New Products</h2>
+              <p class="section-desc">
+                Contrary to popular belief, Lorem Ipsum is not simply random
+                text. It has roots in a piece of classical Latin literature
+              </p>
+            </div>
+            <div class="col-lg-12">
+              <div class="swiper-container product-slider">
+                <div class="swiper-wrapper">
                   <div class="swiper-slide product-item">
                     <div class="product-img">
                       <a href="shop.html">
                         <img
                           class="primary-img"
-                          src="~/assets/images/website-images//1-9-270x300.jpg"
+                          src="~/images/1-9-270x300.jpg"
                           alt="Product Images"
                         />
                         <img
                           class="secondary-img"
-                          src="~/assets/images/website-images//1-10-270x300.jpg"
+                          src="~/images/1-10-270x300.jpg"
                           alt="Product Images"
                         />
                       </a>
@@ -2387,12 +2560,12 @@
                       <a href="shop.html">
                         <img
                           class="primary-img"
-                          src="~/assets/images/website-images//1-10-270x300.jpg"
+                          src="~/images/1-10-270x300.jpg"
                           alt="Product Images"
                         />
                         <img
                           class="secondary-img"
-                          src="~/assets/images/website-images//1-11-270x300.jpg"
+                          src="~/images/1-11-270x300.jpg"
                           alt="Product Images"
                         />
                       </a>
@@ -2467,12 +2640,12 @@
                       <a href="shop.html">
                         <img
                           class="primary-img"
-                          src="~/assets/images/website-images//1-11-270x300.jpg"
+                          src="~/images/1-11-270x300.jpg"
                           alt="Product Images"
                         />
                         <img
                           class="secondary-img"
-                          src="~/assets/images/website-images//1-4-270x300.jpg"
+                          src="~/images/1-4-270x300.jpg"
                           alt="Product Images"
                         />
                       </a>
@@ -2547,12 +2720,12 @@
                       <a href="shop.html">
                         <img
                           class="primary-img"
-                          src="~/assets/images/website-images//1-7-270x300.jpg"
+                          src="~/images/1-7-270x300.jpg"
                           alt="Product Images"
                         />
                         <img
                           class="secondary-img"
-                          src="~/assets/images/website-images//1-8-270x300.jpg"
+                          src="~/images/1-8-270x300.jpg"
                           alt="Product Images"
                         />
                       </a>
@@ -2629,6 +2802,7 @@
         </div>
       </div>
       <!-- Product Area End Here -->
+      *@
 
       <!-- Begin Testimonial Area -->
       <div
@@ -2637,7 +2811,7 @@
         <div class="container-fluid">
           <div
             class="testimonial-bg"
-            data-bg-image="~/assets/images/testimonial/bg/1-1-1820x443.jpg"
+            data-bg-image="~/images/1-1-1820x443.jpg"
           >
             <div class="section-title-wrap">
               <h2 class="section-title">What Say Client</h2>
@@ -2655,7 +2829,7 @@
                     <div class="user-shape-wrap">
                       <div class="user-img">
                         <img
-                          src="~/assets/images/website-images//1--1rnu4p.png"
+                          src="~/images/1--1rnu4p.png"
                           alt="User Image"
                         />
                       </div>
@@ -2675,7 +2849,7 @@
                     <div class="user-shape-wrap">
                       <div class="user-img">
                         <img
-                          src="~/assets/images/website-images//2.png"
+                          src="~/images/2.png"
                           alt="User Image"
                         />
                       </div>
@@ -2695,7 +2869,7 @@
                     <div class="user-shape-wrap">
                       <div class="user-img">
                         <img
-                          src="~/assets/images/website-images//3.png"
+                          src="~/images/3.png"
                           alt="User Image"
                         />
                       </div>
@@ -2724,7 +2898,7 @@
         <div class="container">
           <div
             class="brand-bg"
-            data-bg-image="~/assets/images/website-images//1-1170x300.jpg"
+            data-bg-image="~/images/1-1170x300.jpg"
           >
             <div class="row">
               <div class="col-lg-12">
@@ -2733,7 +2907,7 @@
                     <div class="swiper-slide">
                       <a class="brand-item" href="#">
                         <img
-                          src="~/assets/images/website-images//1-1.png"
+                          src="~/images/1-1.png"
                           alt="Brand Image"
                         />
                       </a>
@@ -2741,7 +2915,7 @@
                     <div class="swiper-slide">
                       <a class="brand-item" href="#">
                         <img
-                          src="~/assets/images/website-images//1-2.png"
+                          src="~/images/1-2.png"
                           alt="Brand Image"
                         />
                       </a>
@@ -2749,7 +2923,7 @@
                     <div class="swiper-slide">
                       <a class="brand-item" href="#">
                         <img
-                          src="~/assets/images/website-images//1-3.png"
+                          src="~/images/1-3.png"
                           alt="Brand Image"
                         />
                       </a>
@@ -2757,7 +2931,7 @@
                     <div class="swiper-slide">
                       <a class="brand-item" href="#">
                         <img
-                          src="~/assets/images/website-images//1-4.png"
+                          src="~/images/1-4.png"
                           alt="Brand Image"
                         />
                       </a>
@@ -2765,7 +2939,7 @@
                     <div class="swiper-slide">
                       <a class="brand-item" href="#">
                         <img
-                          src="~/assets/images/website-images//1-5.png"
+                          src="~/images/1-5.png"
                           alt="Brand Image"
                         />
                       </a>
@@ -2817,7 +2991,7 @@
                         <a href="blog.html">
                           <img
                             class="img-full"
-                            src="~/assets/images/website-images/1-1-310x220.jpg"
+                            src="~/images/1-1-310x220.jpg"
                             alt="Blog Image"
                           />
                         </a>
@@ -2853,7 +3027,7 @@
                         <a href="blog.html">
                           <img
                             class="img-full"
-                            src="~/assets/images/website-images/1-2-310x220.jpg"
+                            src="~/images/1-2-310x220.jpg"
                             alt="Blog Image"
                           />
                         </a>
@@ -2889,7 +3063,7 @@
                         <a href="blog.html">
                           <img
                             class="img-full"
-                            src="~/assets/images/website-images/1-3-310x220.jpg"
+                            src="~/images/1-3-310x220.jpg"
                             alt="Blog Image"
                           />
                         </a>

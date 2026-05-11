@@ -1,19 +1,26 @@
 ﻿using _27_FrontToBackSqlConnection.Data;
 using _27_FrontToBackSqlConnection.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("Default");
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddConfiguredServices(builder.Configuration);
 builder.Services.AddDbContext<AppDbContext>(opt =>
-{
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
-});
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
 var app = builder.Build();
+
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    AppDbContext context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

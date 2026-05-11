@@ -17,7 +17,7 @@ namespace _27_FrontToBackSqlConnection.Data
 		{
 			base.OnModelCreating(modelBuilder);
 
-			DateTime seedDate = new(2026, 5, 8);
+			DateTime seedDate = new(2026, 5, 8, 0, 0, 0, DateTimeKind.Utc);
 
 			modelBuilder.Entity<Product>()
 				.Property(p => p.Price)
@@ -27,6 +27,29 @@ namespace _27_FrontToBackSqlConnection.Data
 				new Category { Id = 1, Name = "House Plants", CreatedAt = seedDate },
 				new Category { Id = 2, Name = "Garden Plants", CreatedAt = seedDate },
 				new Category { Id = 3, Name = "Gift Plants", CreatedAt = seedDate }
+			);
+
+			modelBuilder.Entity<Slider>().HasData(
+				new Slider
+				{
+					Id = 1,
+					Title = "Plant For Healthy",
+					Subtitle = "Discover Now",
+					Desc = "Pronia, With 100% Natural, Organic & Plant Shop.",
+					Image = "1-1-524x617.png",
+					Order = 1,
+					CreatedAt = seedDate
+				},
+				new Slider
+				{
+					Id = 2,
+					Title = "Fresh Your Mind",
+					Subtitle = "Discover Now",
+					Desc = "Pronia, With 100% Natural, Organic & Plant Shop.",
+					Image = "1-2-524x617.png",
+					Order = 2,
+					CreatedAt = seedDate
+				}
 			);
 
 			modelBuilder.Entity<Product>().HasData(
