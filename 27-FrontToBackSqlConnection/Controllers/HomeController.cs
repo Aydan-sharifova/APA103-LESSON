@@ -4,8 +4,6 @@ using _27_FrontToBackSqlConnection.ViewModels;
 using _27_FrontToBackSqlConnection.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace _27_FrontToBackSqlConnection.Controllers;
-
 public class HomeController: Controller
 {
     private readonly AppDbContext _context;
