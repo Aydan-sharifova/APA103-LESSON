@@ -15,12 +15,12 @@ public class HomeController: Controller
     public async Task<IActionResult> Index()
     {
         List<Slider> sliders = await _context.Sliders.OrderBy(s => s.Order)
-            .Where(s => !s.isDeleted)
+            .Where(s => !s.IsDeleted)
             .Take(2)
             .ToListAsync();
 
         List<Product> products = await _context.Products
-            .Where(p => !p.isDeleted)
+            .Where(p => !p.IsDeleted)
             .Include(p => p.Category)
             .Include(p => p.ProductImages)
             .OrderByDescending(p => p.CreatedAt)

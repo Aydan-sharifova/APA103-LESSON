@@ -18,7 +18,7 @@ namespace _27_FrontToBackSqlConnection.Controllers
         public async Task<IActionResult> Index()
         {
             List<Product> products = await _context.Products
-                .Where(p => !p.isDeleted)
+                .Where(p => !p.IsDeleted)
                 .Include(p => p.Category)
                 .Include(p => p.ProductImages)
                 .OrderByDescending(p => p.CreatedAt)

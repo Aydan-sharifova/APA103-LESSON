@@ -20,7 +20,7 @@ public class ProductController : Controller
         Product? product = await _context.Products
             .Include(p => p.Category)
             .Include(p => p.ProductImages)
-            .FirstOrDefaultAsync(p => p.Id == id && !p.isDeleted);
+            .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
 
         if (product is null)
         {
@@ -28,7 +28,7 @@ public class ProductController : Controller
         }
 
         List<Product> relatedProducts = await _context.Products
-            .Where(p => !p.isDeleted && p.Id != id)
+            .Where(p => !p.IsDeleted && p.Id != id)
             .Include(p => p.ProductImages)
             .OrderByDescending(p => p.CreatedAt)
             .Take(4)

@@ -1,15 +1,9 @@
-﻿@inject Microsoft.Extensions.Options.IOptions<_27_FrontToBackSqlConnection.Configurations.AppSettings> AppSettings
-@{
-    string siteTitle = AppSettings.Value.SiteTitle;
-    string headerOffer = AppSettings.Value.HeaderOffer;
-    string phone = AppSettings.Value.Phone;
-}
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>@siteTitle</title>
+    <title>Pronia</title>
     <meta name="robots" content="index, follow" />
     <meta name="description"
           content="Pronia plant store bootstrap 5 template is an awesome website template for any home plant shop." />
@@ -52,7 +46,7 @@
                     <div class="row align-items-center">
                         <div class="col-6">
                             <div class="header-top-left">
-                                <span class="pronia-offer">@headerOffer</span>
+                                <span class="pronia-offer">HELLO EVERYONE! 25% Off All Products</span>
                             </div>
                         </div>
                         <div class="col-6">
@@ -102,7 +96,7 @@
                             <div class="header-middle-wrap position-relative">
                                 <div class="header-contact d-none d-lg-flex">
                                     <i class="pe-7s-call"></i>
-                                    <a href="tel:@phone">@phone</a>
+                                    <a href="tel:+00123456789">+00 123 456 789</a>
                                 </div>
 
                                 <a asp-controller="Home" asp-action="Index" class="header-logo">
