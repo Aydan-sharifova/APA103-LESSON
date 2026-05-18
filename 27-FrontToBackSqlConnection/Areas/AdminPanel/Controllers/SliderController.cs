@@ -1,5 +1,8 @@
 using _27_FrontToBackSqlConnection.Data;
 using _27_FrontToBackSqlConnection.Models;
+using _27_FrontToBackSqlConnection.Areas.AdminPanel.ViewModels.Sliders;
+using _27_FrontToBackSqlConnection.Utilities.Enums;
+using _27_FrontToBackSqlConnection.Utilities.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,46 +30,76 @@ namespace _27_FrontToBackSqlConnection.Areas.AdminPanel.Controllers
             return View(sliders);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Slider slider)
+        public async Task<IActionResult> Create(SliderCreateVM sliderCreateVM)
         {
-            if (!ModelState.IsValid)
+            if (!sliderCreateVM.Photo.CheckFileType("image/"))
             {
+                ModelState.AddModelError("Photo", "File type is incorrect!");
                 return View();
             }
 
-            if (!slider.Photo.ContentType.Contains("image/"))
+            if (!sliderCreateVM.Photo.CheckFileSize(FileSize.KB, 2))
             {
-                ModelState.AddModelError(nameof(Slider.Photo), "File type is incorrect!");
+                ModelState.AddModelError("Photo", "File size must be less than 2mb!");
                 return View();
             }
 
-            if (slider.Photo.Length > 2 * 1024 * 1024)
+            Slider slider = new()
             {
-                ModelState.AddModelError(nameof(Slider.Photo), "File size must be less than 2mb!");
-                return View();
-            }
+                Title = sliderCreateVM.Title,
+                Subtitle = sliderCreateVM.Subtitle,
+                Description = sliderCreateVM.Description,
+                Order = sliderCreateVM.Order,
+                Image = await sliderCreateVM.Photo.CreateFile(_env.WebRootPath, "assets", "images", "website-images"),
+            };
 
-            string fileName = string.Concat(Guid.NewGuid().ToString(), slider.Photo.FileName);
-            string path = Path.Combine(_env.WebRootPath, "images", fileName);
-
-            FileStream fileStream = new FileStream(path, FileMode.Create);
-
-            await slider.Photo.CopyToAsync(fileStream);
-
-            fileStream.Close();
-
-            slider.Image = fileName;
-
-            await _context.AddAsync(slider);
+            await _context.Sliders.AddAsync(slider);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id is null || id < 1) return BadRequest();
+
+            Slider? slider = await _context.Sliders.Where(s => !s.IsDeleted).FirstOrDefaultAsync(s => s.Id == id);
+
+            if (slider == null) return NotFound();
+
+            slider.Image.DeleteFile(_env.WebRootPath, "assets", "images", "website-images");
+
+            _context.Remove(slider);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Update(int? id)
+        {
+            if (id is null || id < 1) return BadRequest();
+
+            Slider? slider = await _context.Sliders.Where(s => !s.IsDeleted).FirstOrDefaultAsync(s => s.Id == id);
+
+            if (slider == null) return NotFound();
+
+            SliderUpdateVM sliderUpdateVM = new()
+            {
+                Title = slider.Title,
+                Subtitle = slider.Subtitle,
+                Description = slider.Description,
+                Order = slider.Order,
+                Image = slider.Image,
+            };
+
+            return View(sliderUpdateVM);
         }
     }
 }
