@@ -1,0 +1,32 @@
+@model Product
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">@Model.Name</h4>
+                        <div class="form-group">
+                            <img src="~/images/@Model.Image" alt="@Model.Name" />
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(Model.HoverImage))
+                        {
+                            <div class="form-group">
+                                <img src="~/images/@Model.HoverImage" alt="@Model.Name hover" />
+                            </div>
+                        }
+                        <p>Category: @Model.Category.Name</p>
+                        <p>SKU: @Model.SKU</p>
+                        <p>Price: $@Model.Price.ToString("0.00")</p>
+                        <p>Featured: @Model.IsFeatured</p>
+                        <p>New: @Model.IsNew</p>
+                        <p>Best Seller: @Model.IsBestSeller</p>
+                        <p>Description: @Model.Description</p>
+                        <a asp-action="Index" class="btn btn-light">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

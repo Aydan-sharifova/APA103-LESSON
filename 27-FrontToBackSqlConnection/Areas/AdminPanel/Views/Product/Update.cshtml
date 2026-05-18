@@ -1,0 +1,85 @@
+@model ProductUpdateVM
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Update Product</h4>
+                        <form class="forms-sample" method="post" enctype="multipart/form-data">
+                            <input asp-for="Image" type="hidden" />
+                            <input asp-for="HoverImage" type="hidden" />
+                            <div class="form-group">
+                                <img src="~/images/@Model.Image" alt="@Model.Name" />
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(Model.HoverImage))
+                            {
+                                <div class="form-group">
+                                    <img src="~/images/@Model.HoverImage" alt="@Model.Name hover" />
+                                </div>
+                            }
+                            <div class="form-group">
+                                <label for="name">Image</label>
+                                <input asp-for="Photo" class="form-control" placeholder="Image" accept="image/*">
+                                <span asp-validation-for="Photo" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Hover Image</label>
+                                <input asp-for="HoverPhoto" class="form-control" placeholder="Hover Image" accept="image/*">
+                                <span asp-validation-for="HoverPhoto" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input asp-for="Name" class="form-control" placeholder="Name">
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">SKU</label>
+                                <input asp-for="SKU" class="form-control" placeholder="SKU">
+                                <span asp-validation-for="SKU" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Price</label>
+                                <input asp-for="Price" class="form-control" placeholder="Price">
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Category</label>
+                                <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control">
+                                    <option value="0">Select category</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Description</label>
+                                <textarea asp-for="Description" class="form-control" placeholder="Description"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                            <div class="form-check form-check-flat form-check-primary">
+                                <label class="form-check-label">
+                                    <input asp-for="IsFeatured" class="form-check-input">
+                                    Featured
+                                </label>
+                            </div>
+                            <div class="form-check form-check-flat form-check-primary">
+                                <label class="form-check-label">
+                                    <input asp-for="IsNew" class="form-check-input">
+                                    New
+                                </label>
+                            </div>
+                            <div class="form-check form-check-flat form-check-primary mb-4">
+                                <label class="form-check-label">
+                                    <input asp-for="IsBestSeller" class="form-check-input">
+                                    Best Seller
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary me-2">Submit</button>
+                            <a asp-action="Index" class="btn btn-light">Back</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
