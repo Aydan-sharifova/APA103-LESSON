@@ -50,6 +50,10 @@
                         <ul class="quantity-with-btn pb-7">
                             <li>SKU: @Model.Product.SKU</li>
                             <li>Category: @Model.Product.Category.Name</li>
+                            @if (Model.Product.ProductTags.Count > 0)
+                            {
+                                <li>Tags: @string.Join(", ", Model.Product.ProductTags.Select(pt => pt.Tag.Name))</li>
+                            }
                         </ul>
                         <div class="single-product-add-to-cart">
                             <a class="btn btn-custom-size lg-size btn-pronia-primary" href="#">Add to cart</a>

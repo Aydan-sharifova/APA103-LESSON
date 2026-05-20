@@ -17,6 +17,7 @@
                             </div>
                         }
                         <p>Category: @Model.Category.Name</p>
+                        <p>Tags: @(Model.ProductTags.Count > 0 ? string.Join(", ", Model.ProductTags.Select(pt => pt.Tag.Name)) : "No tags")</p>
                         <p>SKU: @Model.SKU</p>
                         <p>Price: $@Model.Price.ToString("0.00")</p>
                         <p>Featured: @Model.IsFeatured</p>

@@ -11,6 +11,7 @@ public class Product : BaseEntity
     public int CategoryId { get; set; }
     public Category Category { get; set; } = null!;
     public List<ProductImage> ProductImages { get; set; } = [];
+    public List<ProductTag> ProductTags { get; set; } = [];
     public bool IsFeatured { get; set; }
     public bool IsNew { get; set; }
     public bool IsBestSeller { get; set; }

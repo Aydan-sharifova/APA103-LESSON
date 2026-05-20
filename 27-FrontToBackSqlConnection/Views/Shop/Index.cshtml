@@ -62,6 +62,20 @@
                                     </li>
                                 </ul>
                             </div>
+                            @if (Model.Tags.Count > 0)
+                            {
+                                <div class="widgets-item">
+                                    <h2 class="widgets-title mb-4">Popular Tags</h2>
+                                    <ul class="widgets-tag">
+                                        @foreach (Tag tag in Model.Tags)
+                                        {
+                                            <li>
+                                                <a href="#">@tag.Name</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

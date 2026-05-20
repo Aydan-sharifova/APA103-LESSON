@@ -26,6 +26,8 @@ public class ProductController : Controller
         List<Product> products = await _context.Products
             .Where(p => !p.IsDeleted)
             .Include(p => p.Category)
+            .Include(p => p.ProductTags)
+            .ThenInclude(pt => pt.Tag)
             .OrderByDescending(p => p.CreatedAt)
             .ToListAsync();
 
@@ -34,7 +36,7 @@ public class ProductController : Controller
 
     public async Task<IActionResult> Create()
     {
-        await LoadCategoriesAsync();
+        await LoadProductSelectsAsync();
 
         return View();
     }
@@ -46,7 +48,7 @@ public class ProductController : Controller
 
         if (!ModelState.IsValid)
         {
-            await LoadCategoriesAsync(productCreateVM.CategoryId);
+            await LoadProductSelectsAsync(productCreateVM.CategoryId, productCreateVM.TagIds);
             return View(productCreateVM);
         }
 
@@ -68,7 +70,11 @@ public class ProductController : Controller
             HoverImage = hoverImage,
             IsFeatured = productCreateVM.IsFeatured,
             IsNew = productCreateVM.IsNew,
-            IsBestSeller = productCreateVM.IsBestSeller
+            IsBestSeller = productCreateVM.IsBestSeller,
+            ProductTags = productCreateVM.TagIds
+                .Distinct()
+                .Select(tagId => new ProductTag { TagId = tagId })
+                .ToList()
         };
 
         await _context.Products.AddAsync(product);
@@ -85,6 +91,8 @@ public class ProductController : Controller
             .Where(p => !p.IsDeleted)
             .Include(p => p.Category)
             .Include(p => p.ProductImages)
+            .Include(p => p.ProductTags)
+            .ThenInclude(pt => pt.Tag)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         if (product is null) return NotFound();
@@ -98,6 +106,7 @@ public class ProductController : Controller
 
         Product? product = await _context.Products
             .Where(p => !p.IsDeleted)
+            .Include(p => p.ProductTags)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         if (product is null) return NotFound();
@@ -113,10 +122,11 @@ public class ProductController : Controller
             HoverImage = product.HoverImage,
             IsFeatured = product.IsFeatured,
             IsNew = product.IsNew,
-            IsBestSeller = product.IsBestSeller
+            IsBestSeller = product.IsBestSeller,
+            TagIds = product.ProductTags.Select(pt => pt.TagId).ToList()
         };
 
-        await LoadCategoriesAsync(product.CategoryId);
+        await LoadProductSelectsAsync(product.CategoryId, productUpdateVM.TagIds);
 
         return View(productUpdateVM);
     }
@@ -128,6 +138,7 @@ public class ProductController : Controller
 
         Product? product = await _context.Products
             .Where(p => !p.IsDeleted)
+            .Include(p => p.ProductTags)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         if (product is null) return NotFound();
@@ -138,7 +149,7 @@ public class ProductController : Controller
         {
             productUpdateVM.Image = product.Image;
             productUpdateVM.HoverImage = product.HoverImage;
-            await LoadCategoriesAsync(productUpdateVM.CategoryId);
+            await LoadProductSelectsAsync(productUpdateVM.CategoryId, productUpdateVM.TagIds);
             return View(productUpdateVM);
         }
 
@@ -164,6 +175,7 @@ public class ProductController : Controller
         product.IsFeatured = productUpdateVM.IsFeatured;
         product.IsNew = productUpdateVM.IsNew;
         product.IsBestSeller = productUpdateVM.IsBestSeller;
+        UpdateProductTags(product, productUpdateVM.TagIds);
 
         await _context.SaveChangesAsync();
 
@@ -177,6 +189,7 @@ public class ProductController : Controller
         Product? product = await _context.Products
             .Where(p => !p.IsDeleted)
             .Include(p => p.ProductImages)
+            .Include(p => p.ProductTags)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         if (product is null) return NotFound();
@@ -202,11 +215,36 @@ public class ProductController : Controller
             .ToListAsync();
     }
 
+    private async Task LoadTagsAsync(IEnumerable<int>? selectedTagIds = null)
+    {
+        HashSet<int> selectedIds = selectedTagIds?.ToHashSet() ?? [];
+
+        List<Tag> tags = await _context.Tags
+            .Where(t => !t.IsDeleted)
+            .ToListAsync();
+
+        ViewBag.Tags = tags
+            .Select(t => new SelectListItem
+            {
+                Value = t.Id.ToString(),
+                Text = t.Name,
+                Selected = selectedIds.Contains(t.Id)
+            })
+            .ToList();
+    }
+
+    private async Task LoadProductSelectsAsync(int? selectedCategoryId = null, IEnumerable<int>? selectedTagIds = null)
+    {
+        await LoadCategoriesAsync(selectedCategoryId);
+        await LoadTagsAsync(selectedTagIds);
+    }
+
     private async Task ValidateProductCreateAsync(ProductCreateVM productCreateVM)
     {
         if (!ModelState.IsValid) return;
 
         await ValidateCategoryAsync(productCreateVM.CategoryId);
+        await ValidateTagsAsync(productCreateVM.TagIds);
         await ValidateSkuAsync(productCreateVM.SKU);
         ValidatePhoto(productCreateVM.Photo, nameof(ProductCreateVM.Photo));
         ValidatePhoto(productCreateVM.HoverPhoto, nameof(ProductCreateVM.HoverPhoto), false);
@@ -217,6 +255,7 @@ public class ProductController : Controller
         if (!ModelState.IsValid) return;
 
         await ValidateCategoryAsync(productUpdateVM.CategoryId);
+        await ValidateTagsAsync(productUpdateVM.TagIds);
         await ValidateSkuAsync(productUpdateVM.SKU, productId);
         ValidatePhoto(productUpdateVM.Photo, nameof(ProductUpdateVM.Photo), false);
         ValidatePhoto(productUpdateVM.HoverPhoto, nameof(ProductUpdateVM.HoverPhoto), false);
@@ -230,6 +269,24 @@ public class ProductController : Controller
         if (!categoryExists)
         {
             ModelState.AddModelError("CategoryId", "Select a category");
+        }
+    }
+
+    private async Task ValidateTagsAsync(IEnumerable<int>? tagIds)
+    {
+        List<int> selectedTagIds = tagIds?
+            .Where(tagId => tagId > 0)
+            .Distinct()
+            .ToList() ?? [];
+
+        if (selectedTagIds.Count == 0) return;
+
+        int existingTagCount = await _context.Tags
+            .CountAsync(t => !t.IsDeleted && selectedTagIds.Contains(t.Id));
+
+        if (existingTagCount != selectedTagIds.Count)
+        {
+            ModelState.AddModelError("TagIds", "Select valid tags");
         }
     }
 
@@ -275,6 +332,24 @@ public class ProductController : Controller
     private static bool HasFile(IFormFile? file)
     {
         return file is not null && file.Length > 0;
+    }
+
+    private void UpdateProductTags(Product product, IEnumerable<int> tagIds)
+    {
+        List<int> selectedTagIds = tagIds
+            .Where(tagId => tagId > 0)
+            .Distinct()
+            .ToList();
+        List<ProductTag> existingProductTags = product.ProductTags.ToList();
+
+        _context.ProductTags.RemoveRange(existingProductTags.Where(pt => !selectedTagIds.Contains(pt.TagId)));
+
+        foreach (int tagId in selectedTagIds)
+        {
+            if (existingProductTags.Any(pt => pt.TagId == tagId)) continue;
+
+            product.ProductTags.Add(new ProductTag { TagId = tagId });
+        }
     }
 
     private void DeleteProductImages(Product product)

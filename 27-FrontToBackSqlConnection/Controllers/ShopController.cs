@@ -24,9 +24,15 @@ namespace _27_FrontToBackSqlConnection.Controllers
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
 
+            List<Tag> tags = await _context.Tags
+                .Where(t => !t.IsDeleted)
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
+
             ShopVM shopVm = new()
             {
                 Products = products,
+                Tags = tags,
                 ProductCount = products.Count
             };
 

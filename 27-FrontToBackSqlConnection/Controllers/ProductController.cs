@@ -15,11 +15,15 @@ public class ProductController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Detail(int id)
+    public async Task<IActionResult> Detail(int? id)
     {
+        if (id is null || id < 1) return BadRequest();
+
         Product? product = await _context.Products
             .Include(p => p.Category)
             .Include(p => p.ProductImages)
+            .Include(p => p.ProductTags)
+            .ThenInclude(pt => pt.Tag)
             .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
 
         if (product is null)
@@ -28,7 +32,7 @@ public class ProductController : Controller
         }
 
         List<Product> relatedProducts = await _context.Products
-            .Where(p => !p.IsDeleted && p.Id != id)
+            .Where(p => !p.IsDeleted && p.Id != id && p.CategoryId == product.CategoryId)
             .Include(p => p.ProductImages)
             .OrderByDescending(p => p.CreatedAt)
             .Take(4)

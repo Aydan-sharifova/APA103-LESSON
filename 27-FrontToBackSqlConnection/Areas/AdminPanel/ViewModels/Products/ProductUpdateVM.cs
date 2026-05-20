@@ -21,6 +21,8 @@ public class ProductUpdateVM
     [Range(1, int.MaxValue, ErrorMessage = "Select a category")]
     public int CategoryId { get; set; }
 
+    public List<int> TagIds { get; set; } = [];
+
     public string Image { get; set; } = null!;
     public string? HoverImage { get; set; }
     public IFormFile? Photo { get; set; }
