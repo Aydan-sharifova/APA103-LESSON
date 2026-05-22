@@ -16,6 +16,16 @@
                                 <img src="~/images/@Model.HoverImage" alt="@Model.Name hover" />
                             </div>
                         }
+                        @if (Model.ProductImages.Count > 0)
+                        {
+                            <div class="form-group">
+                                <p>Additional Photos</p>
+                                @foreach (ProductImage productImage in Model.ProductImages)
+                                {
+                                    <img src="~/images/@productImage.Image" alt="@Model.Name additional photo" style="width: 120px; height: 120px; object-fit: cover;" />
+                                }
+                            </div>
+                        }
                         <p>Category: @Model.Category.Name</p>
                         <p>Tags: @(Model.ProductTags.Count > 0 ? string.Join(", ", Model.ProductTags.Select(pt => pt.Tag.Name)) : "No tags")</p>
                         <p>SKU: @Model.SKU</p>

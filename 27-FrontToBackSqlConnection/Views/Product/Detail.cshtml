@@ -29,6 +29,17 @@
                     <div class="single-product-img">
                         <img class="img-full" src="~/images/@Model.Product.Image" alt="@Model.Product.Name" />
                     </div>
+                    @if (Model.Product.ProductImages.Count > 0)
+                    {
+                        <div class="row pt-4">
+                            @foreach (ProductImage productImage in Model.Product.ProductImages)
+                            {
+                                <div class="col-4 col-sm-3 mb-3">
+                                    <img class="img-full" src="~/images/@productImage.Image" alt="@Model.Product.Name additional photo" />
+                                </div>
+                            }
+                        </div>
+                    }
                 </div>
                 <div class="col-lg-6 pt-9 pt-lg-0">
                     <div class="single-product-content">

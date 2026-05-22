@@ -27,6 +27,7 @@ public class ProductCreateVM
     public IFormFile Photo { get; set; } = null!;
 
     public IFormFile? HoverPhoto { get; set; }
+    public List<IFormFile>? AdditionalPhotos { get; set; }
     public bool IsFeatured { get; set; }
     public bool IsNew { get; set; }
     public bool IsBestSeller { get; set; }

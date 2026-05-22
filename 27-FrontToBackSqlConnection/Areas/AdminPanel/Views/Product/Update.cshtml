@@ -8,6 +8,7 @@
                     <div class="card-body">
                         <h4 class="card-title">Update Product</h4>
                         <form class="forms-sample" method="post" enctype="multipart/form-data">
+                            <input asp-for="Id" type="hidden" />
                             <input asp-for="Image" type="hidden" />
                             <input asp-for="HoverImage" type="hidden" />
                             <div class="form-group">
@@ -82,6 +83,46 @@
                             <button type="submit" class="btn btn-primary me-2">Submit</button>
                             <a asp-action="Index" class="btn btn-light">Back</a>
                         </form>
+                        <hr />
+                        <h4 class="card-title">Additional Photos</h4>
+                        @if (TempData["AdditionalPhotoError"] is not null)
+                        {
+                            <div class="alert alert-danger">@TempData["AdditionalPhotoError"]</div>
+                        }
+                        @if (TempData["AdditionalPhotoSuccess"] is not null)
+                        {
+                            <div class="alert alert-success">@TempData["AdditionalPhotoSuccess"]</div>
+                        }
+                        <form class="forms-sample mb-4" asp-action="CreateAdditionalPhotos" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="photos">Add Photos</label>
+                                <input id="photos" name="photos" type="file" class="form-control" accept="image/*" multiple>
+                            </div>
+                            <button type="submit" class="btn btn-outline-success">Add Photos</button>
+                        </form>
+                        @if (Model.ProductImages.Count > 0)
+                        {
+                            @foreach (ProductImage productImage in Model.ProductImages)
+                            {
+                                <div class="border p-3 mb-3">
+                                    <div class="form-group">
+                                        <img src="~/images/@productImage.Image" alt="@Model.Name additional photo" style="width: 120px; height: 120px; object-fit: cover;" />
+                                    </div>
+                                    <form class="forms-sample" asp-action="UpdateAdditionalPhoto" asp-route-id="@productImage.Id" method="post" enctype="multipart/form-data">
+                                        <div class="form-group">
+                                            <label for="photo-@productImage.Id">Replace Photo</label>
+                                            <input id="photo-@productImage.Id" name="photo" type="file" class="form-control" accept="image/*">
+                                        </div>
+                                        <button type="submit" class="btn btn-outline-warning me-2">Update Photo</button>
+                                        <a asp-action="DeleteAdditionalPhoto" asp-route-id="@productImage.Id" class="btn btn-outline-danger">Delete Photo</a>
+                                    </form>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p>No additional photos yet.</p>
+                        }
                     </div>
                 </div>
             </div>

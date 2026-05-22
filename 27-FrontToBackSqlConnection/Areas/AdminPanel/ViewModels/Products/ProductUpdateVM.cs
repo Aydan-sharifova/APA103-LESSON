@@ -1,9 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using _27_FrontToBackSqlConnection.Models;
 
 namespace _27_FrontToBackSqlConnection.Areas.AdminPanel.ViewModels.Products;
 
 public class ProductUpdateVM
 {
+    public int Id { get; set; }
+
     [Required(ErrorMessage = "Don't be empty")]
     [MaxLength(100, ErrorMessage = "Max length is 100")]
     public string Name { get; set; } = null!;
@@ -25,6 +28,7 @@ public class ProductUpdateVM
 
     public string Image { get; set; } = null!;
     public string? HoverImage { get; set; }
+    public List<ProductImage> ProductImages { get; set; } = [];
     public IFormFile? Photo { get; set; }
     public IFormFile? HoverPhoto { get; set; }
     public bool IsFeatured { get; set; }

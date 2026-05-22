@@ -74,7 +74,8 @@ public class ProductController : Controller
             ProductTags = productCreateVM.TagIds
                 .Distinct()
                 .Select(tagId => new ProductTag { TagId = tagId })
-                .ToList()
+                .ToList(),
+            ProductImages = await CreateProductImagesAsync(productCreateVM.AdditionalPhotos)
         };
 
         await _context.Products.AddAsync(product);
@@ -106,6 +107,7 @@ public class ProductController : Controller
 
         Product? product = await _context.Products
             .Where(p => !p.IsDeleted)
+            .Include(p => p.ProductImages)
             .Include(p => p.ProductTags)
             .FirstOrDefaultAsync(p => p.Id == id);
 
@@ -113,6 +115,7 @@ public class ProductController : Controller
 
         ProductUpdateVM productUpdateVM = new()
         {
+            Id = product.Id,
             Name = product.Name,
             Description = product.Description,
             SKU = product.SKU,
@@ -120,6 +123,10 @@ public class ProductController : Controller
             CategoryId = product.CategoryId,
             Image = product.Image,
             HoverImage = product.HoverImage,
+            ProductImages = product.ProductImages
+                .Where(pi => !pi.IsDeleted)
+                .OrderByDescending(pi => pi.CreatedAt)
+                .ToList(),
             IsFeatured = product.IsFeatured,
             IsNew = product.IsNew,
             IsBestSeller = product.IsBestSeller,
@@ -138,6 +145,7 @@ public class ProductController : Controller
 
         Product? product = await _context.Products
             .Where(p => !p.IsDeleted)
+            .Include(p => p.ProductImages)
             .Include(p => p.ProductTags)
             .FirstOrDefaultAsync(p => p.Id == id);
 
@@ -147,8 +155,13 @@ public class ProductController : Controller
 
         if (!ModelState.IsValid)
         {
+            productUpdateVM.Id = product.Id;
             productUpdateVM.Image = product.Image;
             productUpdateVM.HoverImage = product.HoverImage;
+            productUpdateVM.ProductImages = product.ProductImages
+                .Where(pi => !pi.IsDeleted)
+                .OrderByDescending(pi => pi.CreatedAt)
+                .ToList();
             await LoadProductSelectsAsync(productUpdateVM.CategoryId, productUpdateVM.TagIds);
             return View(productUpdateVM);
         }
@@ -202,6 +215,109 @@ public class ProductController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAdditionalPhotos(int? id)
+    {
+        if (id is null || id < 1) return BadRequest();
+
+        Product? product = await _context.Products
+            .Where(p => !p.IsDeleted)
+            .Include(p => p.ProductImages)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (product is null) return NotFound();
+
+        var additionalPhotos = product.ProductImages
+            .Where(pi => !pi.IsDeleted)
+            .OrderByDescending(pi => pi.CreatedAt)
+            .Select(pi => new
+            {
+                pi.Id,
+                pi.Image,
+                ImageUrl = Url.Content($"~/images/{pi.Image}")
+            });
+
+        return Json(additionalPhotos);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateAdditionalPhotos(int? id, List<IFormFile>? photos)
+    {
+        if (id is null || id < 1) return BadRequest();
+
+        Product? product = await _context.Products
+            .Where(p => !p.IsDeleted)
+            .Include(p => p.ProductImages)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (product is null) return NotFound();
+
+        string? validationError = GetPhotoCollectionValidationError(photos, true);
+        if (validationError is not null)
+        {
+            TempData["AdditionalPhotoError"] = validationError;
+            return RedirectToAction(nameof(Update), new { id = product.Id });
+        }
+
+        product.ProductImages.AddRange(await CreateProductImagesAsync(photos));
+        await _context.SaveChangesAsync();
+
+        TempData["AdditionalPhotoSuccess"] = "Additional photos added successfully.";
+
+        return RedirectToAction(nameof(Update), new { id = product.Id });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateAdditionalPhoto(int? id, IFormFile? photo)
+    {
+        if (id is null || id < 1) return BadRequest();
+
+        ProductImage? productImage = await _context.ProductImages
+            .Include(pi => pi.Product)
+            .FirstOrDefaultAsync(pi => !pi.IsDeleted && pi.Id == id && !pi.Product.IsDeleted);
+
+        if (productImage is null) return NotFound();
+
+        string? validationError = GetPhotoValidationError(photo);
+        if (validationError is not null)
+        {
+            TempData["AdditionalPhotoError"] = validationError;
+            return RedirectToAction(nameof(Update), new { id = productImage.ProductId });
+        }
+
+        string newImage = await photo!.CreateFile(_env.WebRootPath, "images");
+        productImage.Image.DeleteFile(_env.WebRootPath, "images");
+        productImage.Image = newImage;
+
+        await _context.SaveChangesAsync();
+
+        TempData["AdditionalPhotoSuccess"] = "Additional photo updated successfully.";
+
+        return RedirectToAction(nameof(Update), new { id = productImage.ProductId });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> DeleteAdditionalPhoto(int? id)
+    {
+        if (id is null || id < 1) return BadRequest();
+
+        ProductImage? productImage = await _context.ProductImages
+            .Include(pi => pi.Product)
+            .FirstOrDefaultAsync(pi => !pi.IsDeleted && pi.Id == id && !pi.Product.IsDeleted);
+
+        if (productImage is null) return NotFound();
+
+        int productId = productImage.ProductId;
+
+        productImage.Image.DeleteFile(_env.WebRootPath, "images");
+        _context.ProductImages.Remove(productImage);
+        await _context.SaveChangesAsync();
+
+        TempData["AdditionalPhotoSuccess"] = "Additional photo deleted successfully.";
+
+        return RedirectToAction(nameof(Update), new { id = productId });
+    }
+
     private async Task LoadCategoriesAsync(int? selectedCategoryId = null)
     {
         ViewBag.Categories = await _context.Categories
@@ -248,6 +364,7 @@ public class ProductController : Controller
         await ValidateSkuAsync(productCreateVM.SKU);
         ValidatePhoto(productCreateVM.Photo, nameof(ProductCreateVM.Photo));
         ValidatePhoto(productCreateVM.HoverPhoto, nameof(ProductCreateVM.HoverPhoto), false);
+        ValidatePhotos(productCreateVM.AdditionalPhotos, nameof(ProductCreateVM.AdditionalPhotos));
     }
 
     private async Task ValidateProductUpdateAsync(ProductUpdateVM productUpdateVM, int productId)
@@ -305,33 +422,91 @@ public class ProductController : Controller
 
     private void ValidatePhoto(IFormFile? photo, string propertyName, bool isRequired = true)
     {
+        string? validationError = GetPhotoValidationError(photo, isRequired);
+
+        if (validationError is not null)
+        {
+            ModelState.AddModelError(propertyName, validationError);
+        }
+    }
+
+    private void ValidatePhotos(IEnumerable<IFormFile>? photos, string propertyName)
+    {
+        if (photos is null) return;
+
+        foreach (IFormFile photo in photos.Where(HasFile))
+        {
+            ValidatePhoto(photo, propertyName, false);
+        }
+    }
+
+    private string? GetPhotoValidationError(IFormFile? photo, bool isRequired = true)
+    {
         if (!HasFile(photo))
         {
-            if (isRequired)
-            {
-                ModelState.AddModelError(propertyName, "Don't be empty");
-            }
-
-            return;
+            return isRequired ? "Don't be empty" : null;
         }
 
         IFormFile validPhoto = photo!;
 
         if (!validPhoto.CheckFileType("image/"))
         {
-            ModelState.AddModelError(propertyName, "File type is incorrect!");
-            return;
+            return "File type is incorrect!";
         }
 
         if (!validPhoto.CheckFileSize(FileSize.MB, 2))
         {
-            ModelState.AddModelError(propertyName, "File size must be less than 2mb!");
+            return "File size must be less than 2mb!";
         }
+
+        return null;
+    }
+
+    private string? GetPhotoCollectionValidationError(IEnumerable<IFormFile>? photos, bool isRequired = false)
+    {
+        List<IFormFile> selectedPhotos = photos?
+            .Where(HasFile)
+            .ToList() ?? [];
+
+        if (selectedPhotos.Count == 0)
+        {
+            return isRequired ? "Select at least one photo." : null;
+        }
+
+        foreach (IFormFile photo in selectedPhotos)
+        {
+            string? validationError = GetPhotoValidationError(photo);
+
+            if (validationError is not null)
+            {
+                return validationError;
+            }
+        }
+
+        return null;
     }
 
     private static bool HasFile(IFormFile? file)
     {
         return file is not null && file.Length > 0;
+    }
+
+    private async Task<List<ProductImage>> CreateProductImagesAsync(IEnumerable<IFormFile>? photos)
+    {
+        List<ProductImage> productImages = [];
+
+        if (photos is null) return productImages;
+
+        foreach (IFormFile photo in photos.Where(HasFile))
+        {
+            productImages.Add(new ProductImage
+            {
+                Image = await photo.CreateFile(_env.WebRootPath, "images"),
+                IsPrimary = false
+            });
+        }
+
+        return productImages;
     }
 
     private void UpdateProductTags(Product product, IEnumerable<int> tagIds)
