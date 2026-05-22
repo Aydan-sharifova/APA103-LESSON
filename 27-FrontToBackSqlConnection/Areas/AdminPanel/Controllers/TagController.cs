@@ -49,7 +49,7 @@ public class TagController : Controller
             return View(tag);
         }
 
-        tag.Name = tag.Name.Trim();
+       
 
         await _context.Tags.AddAsync(tag);
         await _context.SaveChangesAsync();
