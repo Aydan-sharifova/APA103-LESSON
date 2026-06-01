@@ -1,0 +1,46 @@
+@model LoginVM
+
+<div class="login-register-area section-space-y-axis-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <form asp-controller="Account" asp-action="Login" method="post">
+                    <input asp-for="ReturnUrl" type="hidden" />
+                    <div class="login-form">
+                        <h4 class="login-title">Login</h4>
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label asp-for="UserNameOrEmail">User name or email</label>
+                                <input asp-for="UserNameOrEmail" placeholder="User name or email" />
+                                <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-12">
+                                <label asp-for="Password">Password</label>
+                                <input asp-for="Password" placeholder="Password" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="check-box">
+                                    <input asp-for="RememberMe" class="checkbox" />
+                                    <label asp-for="RememberMe">Remember me</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-custom-size lg-size btn-pronia-primary" type="submit">Login</button>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl">Create an account</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
